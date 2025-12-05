@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import database, models
-from routers import user, authentication, expense
+from backend import database, models
+from backend.routers import user, authentication, expense
 
 app = FastAPI()
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://your-frontend-url.vercel.app"],  # Add your actual frontend URL later
+    allow_origins=["*"],  # Add your actual frontend URL later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

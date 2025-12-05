@@ -4,13 +4,19 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-# Always load backend/.env
-BASE_DIR = Path(__file__).resolve().parent
-ENV_PATH = BASE_DIR / ".env"
-
-load_dotenv(dotenv_path=ENV_PATH)
+# Load local .env ONLY if it exists (safe on Railway)
+ENV_PATH = Path(__file__).resolve().parent / ".env"
+if ENV_PATH.exists():
+    load_dotenv(ENV_PATH)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set. Define it in your local .env or Railway variables.")
+
+# Fix postgres:// → postgresql:// for SQLAlchemy
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 engine = create_engine(DATABASE_URL)
 
