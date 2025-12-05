@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 export const createExpense = async (token: string, expenseData: 
     {
         amount: number;
@@ -6,7 +8,7 @@ export const createExpense = async (token: string, expenseData:
         date: string;
     }
 ) => {
-  const response = await fetch("http://127.0.0.1:8000/expenses/create", {
+  const response = await fetch(`${BASE_URL}/expenses/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export const createExpense = async (token: string, expenseData:
 };
 
 export const getAllExpenses = async (token: string) => {
-  const response = await fetch("http://127.0.0.1:8000/expenses/get_expenses", {
+  const response = await fetch(`${BASE_URL}/expenses/get_expenses`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +50,7 @@ export const updateExpense = async (
     date: string;
   }
 ) => {
-  const response = await fetch(`http://127.0.0.1:8000/expenses/update/${id}`, {
+  const response = await fetch(`${BASE_URL}/expenses/update/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -62,4 +64,4 @@ export const updateExpense = async (
   }
 
   return response.json();
-};  
+};

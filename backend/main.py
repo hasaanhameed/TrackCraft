@@ -8,7 +8,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Add your actual frontend URL later
+    allow_origins=["*", "https://your-vercel-domain.vercel.app"],  # Add your actual frontend URL later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

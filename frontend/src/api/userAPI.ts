@@ -1,6 +1,8 @@
+const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 export const createUser = async (name: string, email: string, password: string) => {
   // Making a POST request to create a new user
-  const response = await fetch('http://127.0.0.1:8000/users/signup', {
+  const response = await fetch(`${BASE_URL}/users/signup`, {
     method: 'POST', // HTTP method
     headers: {
       'Content-Type': 'application/json', // Specify the content type as JSON
