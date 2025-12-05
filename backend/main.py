@@ -8,15 +8,17 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "https://your-vercel-domain.vercel.app"],  # Add your actual frontend URL later
+    allow_origins=[
+        "http://localhost:8080",          # Local dev
+        "https://trackcraft.vercel.app"   # Your real frontend domain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Create the database tables
-models.Base.metadata.create_all(database.engine)  
-
+models.Base.metadata.create_all(database.engine)
 
 app.include_router(user.router)
 app.include_router(expense.router)
