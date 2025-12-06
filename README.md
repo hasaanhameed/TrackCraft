@@ -1,4 +1,5 @@
 # TrackCraft – Personal Expense Tracker
+Live Application: https://trackcraft.vercel.app
 
 TrackCraft is a full-stack expense tracking application designed for both mobile and web platforms. It provides an intuitive interface for logging, managing, and reviewing personal expenses. The system consists of a React TypeScript frontend and a FastAPI backend with PostgreSQL as the database.
 
@@ -78,7 +79,4 @@ TrackCraft is a full-stack expense tracking application designed for both mobile
 - User-scoped database operations
 
 
-
-
-## Folder Structure (Overview)
 
