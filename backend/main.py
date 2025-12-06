@@ -9,8 +9,8 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:8080",          # Local dev
-        "https://trackcraft.vercel.app"   # Your real frontend domain
+        "http://localhost:8080",        
+        "https://trackcraft.vercel.app"   
     ],
     allow_credentials=True,
     allow_methods=["*"],
