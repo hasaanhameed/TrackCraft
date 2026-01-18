@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 from jose import JWTError
-from backend.schema import TokenData
+from schema import TokenData
 
 from dotenv import load_dotenv
 import os 

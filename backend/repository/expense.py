@@ -1,4 +1,4 @@
-from backend.models import Expense
+from models import Expense
 from fastapi import HTTPException, status
 
 # CREATING A NEW USER

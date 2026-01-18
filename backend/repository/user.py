@@ -1,6 +1,6 @@
-from backend.models import User
-from backend.hashing import Hash
-from backend import schema
+from models import User
+from hashing import Hash
+import schema
 from sqlalchemy.orm import Session
 
 

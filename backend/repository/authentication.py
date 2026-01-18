@@ -1,8 +1,8 @@
-from backend.hashing import Hash
-from backend import models
+from hashing import Hash
+import models
 from fastapi import HTTPException, status
-from backend.auth_token import create_access_token
-from backend.schema import Token
+from auth_token import create_access_token
+from schema import Token
 
 
 def login_user(request, db):

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend import schema, database, oauth2
-from backend.repository import expense
+import schema, database, oauth2
+from repository import expense
 
 router = APIRouter(tags=["Expenses"], prefix="/expenses")
 
