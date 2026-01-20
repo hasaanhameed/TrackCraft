@@ -5,6 +5,18 @@ class User(BaseModel):
     name: str
     email: str
     password: str
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    monthly_limit: float | None = None
+    
+    class Config:
+        from_attributes = True
+
+class UpdateMonthlyLimit(BaseModel):
+    monthly_limit: float
     
 class Expense(BaseModel):
     amount: float

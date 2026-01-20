@@ -12,6 +12,7 @@ class User(Base):
     name = Column(String)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
+    monthly_limit = Column(Float, nullable=True) 
     
     expenses = relationship("Expense", back_populates="user")
     

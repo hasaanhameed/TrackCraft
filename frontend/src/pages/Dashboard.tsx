@@ -1,41 +1,64 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useExpenses } from '@/hooks/useExpenses';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, List, LogOut } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useExpenses } from "@/hooks/useExpenses";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Plus, List, LogOut } from "lucide-react";
+import MonthlyLimitCard from "@/components/MonthlyLimitCard";
 
 const Dashboard = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user, refreshUser } = useAuth();
   const { expenses } = useExpenses();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [isAuthenticated, navigate]);
 
-  const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
-  
-  const currentMonthExpenses = expenses.filter(expense => {
-    const expenseDate = new Date(expense.date);
-    const now = new Date();
-    return expenseDate.getMonth() === now.getMonth() && 
-           expenseDate.getFullYear() === now.getFullYear();
+  const currentMonth = new Date().toLocaleString("default", {
+    month: "long",
+    year: "numeric",
   });
 
-  const totalThisMonth = currentMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+  const currentMonthExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+    const now = new Date();
+    return (
+      expenseDate.getMonth() === now.getMonth() &&
+      expenseDate.getFullYear() === now.getFullYear()
+    );
+  });
 
-  const categoryTotals = currentMonthExpenses.reduce((acc, expense) => {
-    acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
-    return acc;
-  }, {} as Record<string, number>);
+  const totalThisMonth = currentMonthExpenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0,
+  );
+
+  const categoryTotals = currentMonthExpenses.reduce(
+    (acc, expense) => {
+      acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
+  };
+
+  const handleLimitUpdated = async () => {
+    // Refresh user data to get the updated monthly_limit
+    await refreshUser();
   };
 
   return (
@@ -70,6 +93,14 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
+        {user && (
+          <MonthlyLimitCard
+            monthlyLimit={user.monthly_limit ?? null}
+            totalSpent={totalThisMonth}
+            onLimitUpdated={handleLimitUpdated}
+          />
+        )}
+
         <Card className="shadow-lg border-primary/10">
           <CardHeader>
             <CardTitle>By Category</CardTitle>
@@ -79,7 +110,10 @@ const Dashboard = () => {
             {Object.keys(categoryTotals).length > 0 ? (
               <div className="space-y-3">
                 {Object.entries(categoryTotals).map(([category, total]) => (
-                  <div key={category} className="flex justify-between items-center p-3 bg-secondary rounded-lg">
+                  <div
+                    key={category}
+                    className="flex justify-between items-center p-3 bg-secondary rounded-lg"
+                  >
                     <span className="font-medium">{category}</span>
                     <span className="text-lg font-semibold text-primary">
                       PKR {total.toFixed(2)}
@@ -96,20 +130,20 @@ const Dashboard = () => {
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             variant="outline"
             className="h-20 text-lg"
-            onClick={() => navigate('/add-expense')}
+            onClick={() => navigate("/add-expense")}
           >
             <Plus className="h-5 w-5 mr-2" />
             Add Expense
           </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
+          <Button
+            size="lg"
+            variant="outline"
             className="h-20 text-lg"
-            onClick={() => navigate('/expenses')}
+            onClick={() => navigate("/expenses")}
           >
             <List className="h-5 w-5 mr-2" />
             View All Expenses
