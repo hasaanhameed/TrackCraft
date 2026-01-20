@@ -37,14 +37,22 @@ const MonthlyLimitCard = ({
   const [open, setOpen] = useState(false);
   const [limitValue, setLimitValue] = useState(monthlyLimit?.toString() || "");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
   const handleSaveLimit = async () => {
-    if (!user?.id || !limitValue) return;
+    const numericValue = Number(limitValue);
+
+    if (!user?.id) return;
+
+    if (!numericValue || numericValue <= 0) {
+      setError("Monthly budget must be greater than zero");
+      return;
+    }
 
     setIsLoading(true);
     try {
-      await updateMonthlyLimit(user.id, parseFloat(limitValue));
+      await updateMonthlyLimit(user.id, numericValue);
       onLimitUpdated();
       setOpen(false);
     } catch (error) {
@@ -106,10 +114,23 @@ const MonthlyLimitCard = ({
                     type="number"
                     placeholder="e.g., 20000"
                     value={limitValue}
-                    onChange={(e) => setLimitValue(e.target.value)}
-                    min="0"
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setLimitValue(e.target.value);
+
+                      if (value <= 0) {
+                        setError("Monthly budget must be greater than zero");
+                      } else {
+                        setError(null);
+                      }
+                    }}
+                    min="1"
                     step="100"
                   />
+
+                  {error && (
+                    <p className="text-sm text-red-500 mt-1">{error}</p>
+                  )}
                 </div>
               </div>
               <DialogFooter>
@@ -118,7 +139,7 @@ const MonthlyLimitCard = ({
                 </Button>
                 <Button
                   onClick={handleSaveLimit}
-                  disabled={isLoading || !limitValue}
+                  disabled={isLoading || !!error || !limitValue}
                 >
                   {isLoading ? "Saving..." : "Save Budget"}
                 </Button>

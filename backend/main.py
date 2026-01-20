@@ -10,6 +10,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8080",        
         "https://trackcraft.vercel.app",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],

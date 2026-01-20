@@ -13,11 +13,14 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { createUser } from "@/api/userAPI";
+import { Eye, EyeOff } from "lucide-react";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -38,28 +41,31 @@ const Signup = () => {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters",
         variant: "destructive",
       });
       return;
     }
 
+    setIsLoading(true);
     try {
-      const user = await createUser(fullName, email, password); // Call the API function
+      const user = await createUser(fullName, email, password);
       toast({
         title: "Success",
         description: "Account created successfully! Please sign in.",
       });
-      navigate("/login"); // Redirect to login page
+      navigate("/login");
     } catch (error) {
       toast({
         title: "Error",
         description: error.message || "Failed to create account",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,6 +90,7 @@ const Signup = () => {
                 placeholder=""
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -91,22 +98,39 @@ const Signup = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="you@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isLoading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               <p className="text-xs text-muted-foreground">
-                Must be at least 6 characters
+                Must be at least 8 characters
               </p>
             </div>
             <div className="flex gap-3 pt-2">
@@ -115,11 +139,12 @@ const Signup = () => {
                 variant="outline"
                 className="flex-1"
                 onClick={handleReturn}
+                disabled={isLoading}
               >
                 Return
               </Button>
-              <Button type="submit" className="flex-1">
-                Create
+              <Button type="submit" className="flex-1" disabled={isLoading}>
+                {isLoading ? "Please wait..." : "Create"}
               </Button>
             </div>
           </form>
