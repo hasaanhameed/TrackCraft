@@ -159,18 +159,6 @@ const Login = () => {
             </svg>
             Continue with Google
           </Button>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link
-                to="/signup"
-                className="text-primary font-medium hover:underline"
-              >
-                Create an account
-              </Link>
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
